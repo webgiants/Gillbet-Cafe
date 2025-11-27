@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Coffee, ArrowRight, Star, Clock, MapPin, X, Menu as MenuIcon, ChevronRight, Instagram, Twitter, MessageCircle, Phone, Navigation } from 'lucide-react';
+import { ShoppingBag, Coffee, ArrowRight, Star, Clock, MapPin, X, Menu as MenuIcon, ChevronRight, ChevronLeft, Instagram, Twitter, MessageCircle, Phone, Navigation } from 'lucide-react';
 import { MenuItemData, ReviewData, NavOverlayProps, MarqueeProps } from './types';
 
 // --- Constants & Data ---
@@ -11,20 +11,27 @@ const THEME = {
   gray: '#2A2A2A'
 };
 
+const INSTAGRAM_LINKS = [
+  "https://www.instagram.com/p/DQ65TnekrfA/",
+  "https://www.instagram.com/reel/DQeyEsSkzC-/",
+  "https://www.instagram.com/reel/DQihvWiklc6/",
+  "https://www.instagram.com/p/DQjsavHkji1/"
+];
+
 const SIGNATURE_ITEMS: MenuItemData[] = [
   { 
     name: "Madras Filter Coffee", 
     price: "40", 
     desc: "Authentic South Indian brew. Strong, frothy, and served in the traditional brass davara tumbler.", 
     tags: ["Legendary", "Hot"], 
-    image: "https://images.unsplash.com/photo-1596920658464-9041a31d2798?auto=format&fit=crop&q=80&w=600" 
+    image: "https://t3.ftcdn.net/jpg/05/18/01/04/240_F_518010469_IKxK7kReQ7NurcouzFpj4geU59CA08J6.jpg" 
   },
   { 
     name: "Classic Ginger Tea", 
     price: "35", 
     desc: "Freshly crushed ginger infused with strong tea leaves. The perfect kick for Chennai evenings.", 
     tags: ["Spicy", "Hot"], 
-    image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=600" 
+    image: "https://cdn.shopify.com/s/files/1/0687/6050/2545/files/Ginger_Premix_Tea.png?v=1673889776" 
   },
 ];
 
@@ -39,11 +46,11 @@ const MENU_CATEGORIES: MenuCategory[] = [
     title: "Hot Classics",
     description: "Traditional warmers for the soul.",
     items: [
-      { name: "Masala Tea", price: "35", desc: "Aromatic blend of cardamom, cloves, and cinnamon.", tags: ["Spiced"], image: "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?auto=format&fit=crop&q=80&w=600" },
-      { name: "Classic Tea", price: "25", desc: "Simple, strong, and comforting.", tags: ["Classic"], image: "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&q=80&w=600" },
-      { name: "Lemon Tea", price: "30", desc: "Zesty and refreshing with a hint of mint.", tags: ["Citrus"], image: "https://images.unsplash.com/photo-1595981267035-7b04ca84a82d?auto=format&fit=crop&q=80&w=600" },
-      { name: "Green Tea", price: "35", desc: "Light, healthy, and full of antioxidants.", tags: ["Healthy"], image: "https://images.unsplash.com/photo-1627435601361-ec25481c3db6?auto=format&fit=crop&q=80&w=600" },
-      { name: "Sukku Malli Coffee", price: "35", desc: "Traditional herbal coffee with dry ginger and coriander.", tags: ["Herbal"], image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=600" },
+      { name: "Masala Tea", price: "35", desc: "Aromatic blend of cardamom, cloves, and cinnamon.", tags: ["Spiced"], image: "https://t3.ftcdn.net/jpg/09/09/59/82/240_F_909598295_22TzeFH6waJFdR0JLlNzYYEws0KMNC3e.jpg" },
+      { name: "Classic Tea", price: "25", desc: "Simple, strong, and comforting.", tags: ["Classic"], image: "https://www.sharmispassions.com/wp-content/uploads/2012/12/cardamom-tea3.jpg" },
+      { name: "Lemon Tea", price: "30", desc: "Zesty and refreshing with a hint of mint.", tags: ["Citrus"], image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80&w=600" },
+      { name: "Green Tea", price: "35", desc: "Light, healthy, and full of antioxidants.", tags: ["Healthy"], image: "https://t4.ftcdn.net/jpg/01/08/32/05/240_F_108320596_m5uPH8MSVT9QHrq5QoRMKg1bNpHlryQU.jpg" },
+      { name: "Sukku Malli Coffee", price: "35", desc: "Traditional herbal coffee with dry ginger and coriander.", tags: ["Herbal"], image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTgbx4VswvH6yAFZAzUZ6DuUTlpjCLL_p84w&s" },
       { name: "Hot Boost / Horlicks", price: "40", desc: "The classic malt drinks we all grew up loving.", tags: ["Malt"], image: "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?auto=format&fit=crop&q=80&w=600" },
     ]
   },
@@ -52,22 +59,22 @@ const MENU_CATEGORIES: MenuCategory[] = [
     description: "Perfect companions for your brew.",
     items: [
       { name: "Crispy Samosa", price: "20", desc: "Golden fried pastry filled with spiced potatoes and peas.", tags: ["Vegan"], image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&q=80&w=600" },
-      { name: "Egg Puff", price: "30", desc: "Flaky pastry with a spicy boiled egg masala filling.", tags: ["Bestseller"], image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=600" },
-      { name: "Chicken Puff", price: "40", desc: "Oven-baked layers filled with spicy chicken masala.", tags: ["Non-Veg"], image: "https://images.unsplash.com/photo-1606757302279-376246473136?auto=format&fit=crop&q=80&w=600" },
-      { name: "Veg Momos", price: "80", desc: "Steamed dumplings served with spicy chutney.", tags: ["Steamed"], image: "https://images.unsplash.com/photo-1626776420079-95e2475cadbd?auto=format&fit=crop&q=80&w=600" },
-      { name: "French Fries", price: "80", desc: "Classic salted shoestring fries.", tags: ["Fried"], image: "https://images.unsplash.com/photo-1573080496987-a199f8cd4054?auto=format&fit=crop&q=80&w=600" },
-      { name: "Chicken Popcorn", price: "110", desc: "Bite-sized crispy chicken chunks.", tags: ["Non-Veg"], image: "https://images.unsplash.com/photo-1562967960-f556f3f02db1?auto=format&fit=crop&q=80&w=600" },
+      { name: "Egg Puff", price: "30", desc: "Flaky pastry with a spicy boiled egg masala filling.", tags: ["Bestseller"], image: "https://i0.wp.com/mariasmenu.com/wp-content/uploads/Kerala-Egg-Puffs.png?fit=650%2C886&ssl=1" },
+      { name: "Chicken Puff", price: "40", desc: "Oven-baked layers filled with spicy chicken masala.", tags: ["Non-Veg"], image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqNediSfBMCKqWf0UvrbOFKiNAb_0W_WmpHQ&s" },
+      { name: "Veg Momos", price: "80", desc: "Steamed dumplings served with spicy chutney.", tags: ["Steamed"], image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&q=80&w=600" },
+      { name: "French Fries", price: "80", desc: "Classic salted shoestring fries.", tags: ["Fried"], image: "https://t4.ftcdn.net/jpg/15/03/85/47/240_F_1503854710_IAH8Py9CJomWgkcuiwUF1ZXpyueqAgqu.jpg" },
+      { name: "Chicken Popcorn", price: "110", desc: "Bite-sized crispy chicken chunks.", tags: ["Non-Veg"], image: "https://t4.ftcdn.net/jpg/16/34/64/05/240_F_1634640509_XTOJrphLbVT8KirtG3rPG0gK3bfP7Jr5.jpg" },
     ]
   },
   {
     title: "Filling Eats",
     description: "Sandwiches, Maggi, and Omelettes.",
     items: [
-      { name: "Paneer Sandwich", price: "90", desc: "Spiced paneer filling grilled between thick bread slices.", tags: ["Grilled"], image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80&w=600" },
-      { name: "Chicken Sandwich", price: "110", desc: "Shredded chicken in mayo and spices.", tags: ["Non-Veg"], image: "https://images.unsplash.com/photo-1553909489-cd47e3b215a7?auto=format&fit=crop&q=80&w=600" },
-      { name: "Corn Cheese Sandwich", price: "90", desc: "Sweet corn and melting cheese toast.", tags: ["Cheesy"], image: "https://images.unsplash.com/photo-1619860860774-1e7e1732e440?auto=format&fit=crop&q=80&w=600" },
-      { name: "Bun Butter Jam", price: "50", desc: "Nostalgia on a plate. Soft bun, generous butter, and fruit jam.", tags: ["Sweet"], image: "https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?auto=format&fit=crop&q=80&w=600" },
-      { name: "Bread Omelette", price: "70", desc: "Street style spicy omelette wrapped around toasted bread.", tags: ["Spicy"], image: "https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&q=80&w=600" },
+      { name: "Paneer Sandwich", price: "90", desc: "Spiced paneer filling grilled between thick bread slices.", tags: ["Grilled"], image: "https://t4.ftcdn.net/jpg/14/15/70/15/240_F_1415701541_pugH3h15EnW8JosvRDws68bWrjHtQ59p.jpg" },
+      { name: "Chicken Sandwich", price: "110", desc: "Shredded chicken in mayo and spices.", tags: ["Non-Veg"], image: "https://t4.ftcdn.net/jpg/15/44/90/25/240_F_1544902535_uYTmybXpb3krSaXMT382lDvOMle23K1o.jpg" },
+      { name: "Corn Cheese Sandwich", price: "90", desc: "Sweet corn and melting cheese toast.", tags: ["Cheesy"], image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjq3vqsJkJuPEIbda3IkDCSevQO2PjEqC9ow&s" },
+      { name: "Bun Butter Jam", price: "50", desc: "Nostalgia on a plate. Soft bun, generous butter, and fruit jam.", tags: ["Sweet"], image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQ3ytyAtXEVSkrLEeDJsZV0OoxaXRfSzGVQQ&s" },
+      { name: "Bread Omelette", price: "70", desc: "Street style spicy omelette wrapped around toasted bread.", tags: ["Spicy"], image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS47xpIzRo_c_Ms14kpdXMAuFsjGO4h77leUw&s" },
       { name: "Spicy Maggi", price: "60", desc: "Your favorite noodles cooked with extra spices and veggies.", tags: ["Comfort"], image: "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&q=80&w=600" },
     ]
   }
@@ -77,13 +84,6 @@ const REVIEWS: ReviewData[] = [
   { id: 1, author: "Arun K.", handle: "@arun_chennai", text: "The Filter Coffee hits different here. Proper strong.", rating: 5 },
   { id: 2, author: "Sarah J.", handle: "@sarah.eats", text: "Best spot for a quick Bun Butter Jam and chill vibes.", rating: 5 },
   { id: 3, author: "Vikram R.", handle: "@vik_designs", text: "Finally a cafe in Chennai with this brutalist aesthetic. Love it.", rating: 4 },
-];
-
-const GALLERY_IMAGES = [
-  "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=800",
-  "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800",
-  "https://images.unsplash.com/photo-1511537632536-b7a4896848a5?auto=format&fit=crop&q=80&w=800",
-  "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=800",
 ];
 
 const CONTACT_INFO = {
@@ -159,9 +159,6 @@ const MenuItem: React.FC<MenuItemData> = ({ name, price, desc, tags, image }) =>
             </span>
             ))}
         </div>
-        <button className="w-8 h-8 bg-white text-black flex items-center justify-center hover:bg-[#FF5E1A] transition-colors rounded-sm">
-             <ArrowRight size={16} className="-rotate-45" />
-        </button>
       </div>
     </div>
   </div>
@@ -186,9 +183,6 @@ const SignatureItem: React.FC<MenuItemData> = ({ name, price, desc, tags, image 
           <p className="text-gray-400 group-hover:text-black/80 transition-colors mb-6">{desc}</p>
           <div className="flex items-center justify-between">
               <span className="text-3xl font-black text-[#FF5E1A] group-hover:text-black transition-colors">₹{price}</span>
-              <button className="px-6 py-2 border-2 border-white text-white font-bold uppercase group-hover:border-black group-hover:text-black transition-colors">
-                 Order Now
-              </button>
           </div>
        </div>
     </div>
@@ -221,17 +215,64 @@ const NavOverlay: React.FC<NavOverlayProps> = ({ isOpen, onClose }) => {
   );
 };
 
+const InstagramEmbed: React.FC<{ url: string }> = ({ url }) => (
+  <blockquote 
+    className="instagram-media" 
+    data-instgrm-permalink={url} 
+    data-instgrm-version="14" 
+    style={{ background: '#121212', border: '1px solid #333', borderRadius: '3px', boxShadow: 'none', margin: '1px', maxWidth: '540px', minWidth: '326px', padding: 0, width: 'calc(100% - 2px)' }}
+  >
+  </blockquote>
+);
+
 // --- Main App ---
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [zomatoMessage, setZomatoMessage] = useState("");
+  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+
+  const handleZomatoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setZomatoMessage("We Will Be Available Soon In Zomato...");
+    setTimeout(() => setZomatoMessage(""), 3000);
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if ((window as any).instgrm) {
+        (window as any).instgrm.Embeds.process();
+    } else {
+        const interval = setInterval(() => {
+            if ((window as any).instgrm) {
+                (window as any).instgrm.Embeds.process();
+                clearInterval(interval);
+            }
+        }, 500);
+        return () => clearInterval(interval);
+    }
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentReviewIndex((prev) => (prev + 1) % REVIEWS.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextReview = () => {
+    setCurrentReviewIndex((prev) => (prev + 1) % REVIEWS.length);
+  };
+
+  const prevReview = () => {
+    setCurrentReviewIndex((prev) => (prev - 1 + REVIEWS.length) % REVIEWS.length);
+  };
 
   return (
     <div className="min-h-screen bg-[#121212] text-white font-sans selection:bg-[#FF5E1A] selection:text-black">
@@ -259,9 +300,6 @@ export default function App() {
           </a>
           
           <div className="flex items-center gap-8">
-            <button className="hidden md:flex items-center gap-2 text-sm font-bold uppercase hover:text-[#FF5E1A] transition-colors tracking-widest">
-              <ShoppingBag size={18} /> Cart (0)
-            </button>
             <button onClick={() => setIsMenuOpen(true)} className="flex items-center gap-3 text-sm font-bold uppercase hover:text-[#FF5E1A] transition-colors tracking-widest group">
               <span className="hidden md:block">Menu</span>
               <div className="p-2 bg-white text-black rounded-full group-hover:bg-[#FF5E1A] transition-colors">
@@ -299,12 +337,12 @@ export default function App() {
             </p>
             
             <div className="flex flex-wrap gap-6 pt-4">
-              <button className="px-10 py-5 bg-[#FF5E1A] text-black font-black uppercase hover:bg-white transition-all transform hover:-translate-y-1 shadow-[8px_8px_0px_0px_#FFF]">
-                Order Pickup
-              </button>
-              <button className="px-10 py-5 bg-transparent border-2 border-white text-white font-black uppercase hover:bg-white hover:text-black transition-all">
+              <a href="#menu" className="px-10 py-5 bg-[#FF5E1A] text-black font-black uppercase hover:bg-white transition-all transform hover:-translate-y-1 shadow-[8px_8px_0px_0px_#FFF] flex items-center justify-center">
                 View Menu
-              </button>
+              </a>
+              <a href="#about" className="px-10 py-5 bg-transparent border-2 border-white text-white font-black uppercase hover:bg-white hover:text-black transition-all flex items-center justify-center">
+                Our Story
+              </a>
             </div>
           </div>
           
@@ -407,9 +445,12 @@ export default function App() {
           ))}
 
           <div className="mt-20 flex justify-center">
-             <a href="#" className="group flex flex-col items-center gap-2">
+             <a href="#" onClick={handleZomatoClick} className="group flex flex-col items-center gap-2">
                 <span className="text-2xl font-black uppercase tracking-widest group-hover:text-[#FF5E1A] transition-colors">Order On Zomato</span>
                 <div className="w-full h-1 bg-[#333] group-hover:bg-[#FF5E1A] transition-colors duration-500"></div>
+                {zomatoMessage && (
+                  <span className="text-[#FF5E1A] mt-4 font-bold animate-pulse">{zomatoMessage}</span>
+                )}
              </a>
           </div>
         </div>
@@ -418,7 +459,7 @@ export default function App() {
       <Marquee text="THE VIBE IS IMMACULATE • TASTE THE DIFFERENCE •" direction="right" className="bg-white text-black border-none" />
 
       {/* Reviews Section */}
-      <section id="reviews" className="py-24 bg-[#FF5E1A] text-black overflow-hidden">
+      <section id="reviews" className="py-24 bg-[#FF5E1A] text-black">
         <div className="container mx-auto px-6 mb-12 flex justify-between items-end">
             <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter">What <br/> People Say</h2>
             <div className="hidden md:block">
@@ -426,35 +467,82 @@ export default function App() {
             </div>
         </div>
         
-        <div className="flex overflow-x-auto gap-8 pb-12 px-6 scrollbar-hide snap-x">
-            {REVIEWS.map((review) => (
-                <div key={review.id} className="min-w-[350px] md:min-w-[450px] bg-black text-white p-8 md:p-12 snap-center border-4 border-black shadow-[12px_12px_0px_0px_rgba(255,255,255,0.2)]">
-                    <div className="flex gap-1 mb-6">
-                        {[...Array(review.rating)].map((_, i) => <Star key={i} className="w-5 h-5 fill-[#FF5E1A] text-[#FF5E1A]" />)}
+        <div className="container mx-auto px-6 relative max-w-6xl">
+           <div className="overflow-hidden">
+              <div 
+                className="flex transition-transform duration-500 ease-in-out" 
+                style={{ transform: `translateX(-${currentReviewIndex * 100}%)` }}
+              >
+                 {REVIEWS.map((review) => (
+                    <div key={review.id} className="w-full flex-shrink-0 px-2">
+                       <div className="bg-black text-white p-8 md:p-16 border-4 border-black shadow-[12px_12px_0px_0px_white] mx-auto relative">
+                           <div className="flex flex-col md:flex-row gap-8 md:items-start justify-between">
+                               <div>
+                                  <div className="flex gap-1 mb-6">
+                                      {[...Array(review.rating)].map((_, i) => <Star key={i} className="w-6 h-6 fill-[#FF5E1A] text-[#FF5E1A]" />)}
+                                  </div>
+                                  <p className="text-2xl md:text-4xl font-black leading-tight mb-8 uppercase italic">"{review.text}"</p>
+                                  <div className="flex items-center gap-4 border-t border-gray-800 pt-6">
+                                      <div className="w-12 h-12 bg-[#FF5E1A] rounded-full flex items-center justify-center text-black font-bold text-xl">
+                                          {review.author.charAt(0)}
+                                      </div>
+                                      <div>
+                                          <p className="font-bold uppercase tracking-wider">{review.author}</p>
+                                          <p className="text-sm text-gray-400">{review.handle}</p>
+                                      </div>
+                                  </div>
+                               </div>
+                               <div className="opacity-20 hidden md:block">
+                                   <Star className="w-32 h-32 text-white" />
+                               </div>
+                           </div>
+                       </div>
                     </div>
-                    <p className="text-xl md:text-2xl font-bold leading-tight mb-8">"{review.text}"</p>
-                    <div className="flex items-center gap-4 border-t border-gray-800 pt-6">
-                        <div className="w-10 h-10 bg-[#FF5E1A] rounded-full"></div>
-                        <div>
-                            <p className="font-bold uppercase">{review.author}</p>
-                            <p className="text-xs text-gray-500">{review.handle}</p>
-                        </div>
-                    </div>
-                </div>
-            ))}
+                 ))}
+              </div>
+           </div>
+           
+           {/* Controls */}
+           <div className="flex flex-col md:flex-row items-center justify-between mt-12 gap-8 px-2">
+               <div className="flex gap-3">
+                  {REVIEWS.map((_, idx) => (
+                     <button 
+                       key={idx}
+                       onClick={() => setCurrentReviewIndex(idx)}
+                       className={`w-3 h-3 md:w-4 md:h-4 border-2 border-black transition-all duration-300 ${idx === currentReviewIndex ? 'bg-black scale-110' : 'bg-transparent hover:bg-black/50'}`}
+                       aria-label={`Go to review ${idx + 1}`}
+                     />
+                  ))}
+               </div>
+               
+               <div className="flex gap-4">
+                  <button onClick={prevReview} className="p-3 md:p-4 bg-black text-white hover:bg-white hover:text-black border-2 border-transparent hover:border-black transition-all active:scale-95" aria-label="Previous review">
+                     <ChevronLeft size={24} />
+                  </button>
+                  <button onClick={nextReview} className="p-3 md:p-4 bg-black text-white hover:bg-white hover:text-black border-2 border-transparent hover:border-black transition-all active:scale-95" aria-label="Next review">
+                     <ChevronRight size={24} />
+                  </button>
+               </div>
+           </div>
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section className="grid grid-cols-2 md:grid-cols-4 h-[400px] md:h-[500px]">
-        {GALLERY_IMAGES.map((src, i) => (
-            <div key={i} className="relative group overflow-hidden border border-black">
-                <img src={src} alt="Gallery" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" />
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Instagram className="text-white w-8 h-8" />
-                </div>
+      {/* Instagram Grid Section - Live Embeds */}
+      <section id="socials" className="py-24 bg-black border-b border-[#222]">
+          <div className="container mx-auto px-6">
+            <div className="flex flex-col items-center mb-12">
+               <h2 className="text-5xl md:text-7xl font-black uppercase mb-4 text-center tracking-tighter text-white">
+                 Caught On <span className="text-[#FF5E1A]">Cam</span>
+               </h2>
+               <p className="text-gray-400">Tag us @gillbet_cafe to get featured.</p>
             </div>
-        ))}
+            
+            <div className="flex flex-wrap justify-center gap-6">
+              {INSTAGRAM_LINKS.map((link, i) => (
+                  <InstagramEmbed key={i} url={link} />
+              ))}
+            </div>
+          </div>
       </section>
 
       {/* Location & Map Section */}
